@@ -1,0 +1,3 @@
+com\mag\frontsense\models\LoginResponse.class
+com\mag\frontsense\models\MongoUser.class
+com\mag\frontsense\models\User.class
