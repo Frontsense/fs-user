@@ -38,4 +38,10 @@ public class UsersBean {
         return mu.loginUser(loginJson);
 
     }
+
+    public List<String> createUser(JSONObject registerJson) {
+        MongoUser mu = new MongoUser();
+
+        return mu.createUser(registerJson);
+    }
 }

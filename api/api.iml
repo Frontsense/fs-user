@@ -11,6 +11,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="org.json:json:20190722" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:3.8.1" level="project" />
     <orderEntry type="library" name="Maven: com.kumuluz.ee:kumuluzee-microProfile-1.0:3.6.0" level="project" />
     <orderEntry type="library" name="Maven: com.kumuluz.ee:kumuluzee-core:3.6.0" level="project" />
@@ -106,6 +107,6 @@
     <orderEntry type="module" module-name="fs-services" />
     <orderEntry type="module" module-name="fs-models" />
     <orderEntry type="library" name="Maven: org.mongodb:mongo-java-driver:3.12.0" level="project" />
-    <orderEntry type="library" name="org.json:json:20190722" level="project" />
+    <orderEntry type="library" name="Maven: org.json:json:20190722" level="project" />
   </component>
 </module>

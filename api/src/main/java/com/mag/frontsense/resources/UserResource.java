@@ -46,7 +46,7 @@ public class UserResource {
         int pass = loginResponse.getPass();
 
         if (pass == 1 || pass == 2) {
-            //user doesn't exist
+            //user or password incorrect
             JSONObject error = new JSONObject()
                                     .put("error", "Incorrect username or password.");
             return Response.ok(error.toString()).build();
@@ -57,4 +57,18 @@ public class UserResource {
 
     }
 
+    @POST
+    @Path("/create")
+    public Response createUser(String registerInfo) {
+        List<String> responseCreate = usersBean.createUser(new JSONObject(registerInfo));
+
+        JSONObject response = new JSONObject();
+        if (responseCreate.size() == 0) {
+            response.put("success", "Account created successfully");
+        } else {
+            response.put("error", responseCreate.toArray());
+        }
+
+        return Response.ok(response.toString()).build();
+    }
 }
