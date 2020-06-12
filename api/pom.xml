@@ -80,6 +80,12 @@
 		<version>20190722</version>
 	</dependency>
 
+	<dependency>
+		<groupId>com.kumuluz.ee.cors</groupId>
+		<artifactId>kumuluzee-cors</artifactId>
+		<version>1.0.5</version>
+	</dependency>
+
   </dependencies>
   
 </project>

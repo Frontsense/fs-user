@@ -1,5 +1,6 @@
 package com.mag.frontsense.resources;
 
+import com.kumuluz.ee.cors.annotations.CrossOrigin;
 import com.mag.frontsense.beans.UsersBean;
 import com.mag.frontsense.models.LoginResponse;
 import com.mag.frontsense.models.User;
@@ -16,16 +17,22 @@ import java.util.List;
 @ApplicationScoped
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@CrossOrigin(name="http://localhost:8100")
 public class UserResource {
 
     @Inject
     private UsersBean usersBean;
 
-
     @GET
     @Path("/test")
+    @CrossOrigin(name="http://localhost:8100")
     public Response testResponse() {
-        return Response.ok("User api is up and running!").build();
+        return Response.ok("User api is up and running!")
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Credentials", "true")
+                .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept")
+                .build();
     }
 
     @GET
@@ -33,7 +40,23 @@ public class UserResource {
     public Response getUsers() {
         List<User> users = usersBean.allUsers();
 
-        return Response.ok(users).build();
+        return Response.ok(users)
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Credentials", "true")
+                .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept")
+                .build();
+    }
+
+    @OPTIONS
+    @Path("/login")
+    public Response optionsLogin() {
+        return Response.ok()
+                .header("Access-Control-Allow-Origin", "http://localhost:8100")
+                .header("Access-Control-Allow-Credentials", "true")
+                .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept")
+                .build();
     }
 
     @POST
@@ -45,16 +68,26 @@ public class UserResource {
 
         int pass = loginResponse.getPass();
 
+        JSONObject returnJson = null;
+
         if (pass == 1 || pass == 2) {
             //user or password incorrect
             JSONObject error = new JSONObject()
                                     .put("error", "Incorrect username or password.");
-            return Response.ok(error.toString()).build();
+            returnJson = error;
         } else {
-            JSONObject idToken = loginResponse.getIdToken();
-            return Response.ok(idToken.toString()).build();
+//            JSONObject idToken = loginResponse.getIdToken();
+            JSONObject idToken = new JSONObject()
+                                        .put("success", loginResponse.getIdToken());
+            returnJson = idToken;
         }
 
+        return Response.ok(returnJson.toString())
+                .header("Access-Control-Allow-Origin", "http://localhost:8100")
+                .header("Access-Control-Allow-Credentials", "true")
+                .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept")
+                .build();
     }
 
     @POST
@@ -69,6 +102,7 @@ public class UserResource {
             response.put("error", responseCreate.toArray());
         }
 
-        return Response.ok(response.toString()).build();
+        return Response.ok(response.toString())
+                .build();
     }
 }

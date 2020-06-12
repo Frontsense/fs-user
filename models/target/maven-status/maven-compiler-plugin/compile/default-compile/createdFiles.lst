@@ -1,3 +1,4 @@
 com\mag\frontsense\models\LoginResponse.class
 com\mag\frontsense\models\MongoUser.class
 com\mag\frontsense\models\User.class
+com\mag\frontsense\models\Sha256.class

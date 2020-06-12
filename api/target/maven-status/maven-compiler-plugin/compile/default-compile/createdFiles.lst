@@ -1,2 +1,4 @@
 com\mag\frontsense\UserApplication.class
+META-INF\resources\java.lang.Object
+META-INF\services\javax.ws.rs.core.Application
 com\mag\frontsense\resources\UserResource.class

@@ -10,6 +10,7 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.json.JSONObject;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,8 +37,7 @@ public class MongoUser {
         for(Document curr : userCollection.find()) {
             User currUser = new User(curr.getInteger("userId"),
                                 curr.getString("username"),
-                                curr.getString("email"),
-                                curr.getString("password")
+                                curr.getString("email")
                         );
 
             results.add(currUser);
@@ -64,17 +64,28 @@ public class MongoUser {
             return new LoginResponse(1, null);
         }
 
-        //match passwords
-        boolean correctPassword = resultEmail.getString("password").equals(loginJson.getString("password"));
-        if (!correctPassword) {
-            return new LoginResponse(2, null);
+        //hash password
+        try {
+            String password = loginJson.getString("password");
+            String _id = resultEmail.get("_id").toString();
+            String hashedPassword = Sha256.toHexString(Sha256.getSHA(password + _id));
+
+            //match hashedPassword with stored
+            boolean correctPassword = resultEmail.getString("password").equals(hashedPassword);
+            if (!correctPassword) {
+                return new LoginResponse(2, null);
+            }
+
+            JSONObject idToken = new JSONObject()
+                                    .put("email", resultEmail.getString("email"))
+                                    .put("user", resultEmail.getString("username"));
+
+            return new LoginResponse(0, idToken);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
         }
 
-        JSONObject idToken = new JSONObject()
-                                .put("email", resultEmail.getString("email"))
-                                .put("user", resultEmail.getString("username"));
-
-        return new LoginResponse(0, idToken);
+        return new LoginResponse(1, null);
     }
 
     public List<String> createUser(JSONObject registerJson) {
