@@ -90,6 +90,18 @@ public class UserResource {
                 .build();
     }
 
+
+    @OPTIONS
+    @Path("/create")
+    public Response optionsCreate() {
+        return Response.ok()
+                .header("Access-Control-Allow-Origin", "http://localhost:8100")
+                .header("Access-Control-Allow-Credentials", "true")
+                .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept")
+                .build();
+    }
+
     @POST
     @Path("/create")
     public Response createUser(String registerInfo) {
@@ -103,6 +115,10 @@ public class UserResource {
         }
 
         return Response.ok(response.toString())
+                .header("Access-Control-Allow-Origin", "http://localhost:8100")
+                .header("Access-Control-Allow-Credentials", "true")
+                .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept")
                 .build();
     }
 }
