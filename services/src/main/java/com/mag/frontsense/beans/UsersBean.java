@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import java.util.List;
+import java.util.Map;
 
 @RequestScoped
 public class UsersBean {
@@ -32,10 +33,10 @@ public class UsersBean {
         return mu.getAllUsers();
     }
 
-    public LoginResponse loginUser(JSONObject loginJson) {
+    public LoginResponse loginUser(JSONObject loginJson, Map nonceMap) {
         MongoUser mu = new MongoUser();
 
-        return mu.loginUser(loginJson);
+        return mu.loginUser(loginJson, nonceMap);
 
     }
 
@@ -43,5 +44,11 @@ public class UsersBean {
         MongoUser mu = new MongoUser();
 
         return mu.createUser(registerJson);
+    }
+
+    public String getNonce() {
+        MongoUser mu = new MongoUser();
+
+        return mu.createNonce();
     }
 }

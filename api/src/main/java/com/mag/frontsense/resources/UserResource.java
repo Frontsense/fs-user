@@ -11,7 +11,9 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Path("/user")
 @ApplicationScoped
@@ -19,6 +21,8 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 @CrossOrigin(name="http://localhost:8100")
 public class UserResource {
+
+    private Map<String, String> nonceMap = new HashMap<>();
 
     @Inject
     private UsersBean usersBean;
@@ -49,6 +53,33 @@ public class UserResource {
     }
 
     @OPTIONS
+    @Path("/nonce")
+    public Response optionsNonce() {
+        return Response.ok()
+                .header("Access-Control-Allow-Origin", "http://localhost:8100")
+                .header("Access-Control-Allow-Credentials", "true")
+                .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept")
+                .build();
+    }
+
+
+    @POST
+    @Path("/nonce")
+    public Response getNonce(String nonceInfo) {
+        JSONObject nonceJson = new JSONObject(nonceInfo);
+        String nonce = usersBean.getNonce();
+        nonceMap.put(nonceJson.getString("email"), nonce);
+
+        return Response.ok(nonce)
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Credentials", "true")
+                .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept")
+                .build();
+    }
+
+    @OPTIONS
     @Path("/login")
     public Response optionsLogin() {
         return Response.ok()
@@ -64,7 +95,7 @@ public class UserResource {
     public Response loginUser(String loginInfo) {
         JSONObject loginJson = new JSONObject(loginInfo);
 
-        LoginResponse loginResponse = usersBean.loginUser(loginJson);
+        LoginResponse loginResponse = usersBean.loginUser(loginJson, nonceMap);
 
         int pass = loginResponse.getPass();
 
@@ -76,11 +107,12 @@ public class UserResource {
                                     .put("error", "Incorrect username or password.");
             returnJson = error;
         } else {
-//            JSONObject idToken = loginResponse.getIdToken();
             JSONObject idToken = new JSONObject()
                                         .put("success", loginResponse.getIdToken());
             returnJson = idToken;
         }
+
+        nonceMap.remove(loginJson.getString("email"));
 
         return Response.ok(returnJson.toString())
                 .header("Access-Control-Allow-Origin", "http://localhost:8100")

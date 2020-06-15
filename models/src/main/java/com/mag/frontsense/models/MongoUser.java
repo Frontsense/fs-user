@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MongoUser {
 
@@ -47,7 +48,11 @@ public class MongoUser {
         return results;
     }
 
-    public LoginResponse loginUser(JSONObject loginJson) {
+    public String createNonce() {
+        return Sha256.toHexString(Sha256.getNextSalt());
+    }
+
+    public LoginResponse loginUser(JSONObject loginJson, Map<String, String> nonceMap) {
         MongoClient client = connectDB();
         MongoDatabase db = client.getDatabase(DBName);
         MongoCollection<Document> userCollection = db.getCollection(DBCollection);
@@ -65,14 +70,18 @@ public class MongoUser {
             return new LoginResponse(1, null);
         }
 
-        //hash password
+        //hash (snonce, cnonce, password)
         try {
-            String password = loginJson.getString("password");
-            String _id = resultEmail.get("_id").toString();
-            String hashedPassword = Sha256.toHexString(Sha256.getSHA(password + _id));
+            String clientPassword = loginJson.getString("password");
+
+            String snonce = nonceMap.get(loginJson.getString("email"));
+            String cnonce = loginJson.getString("cNonce");
+
+            String storedPasword = resultEmail.getString("password");
+            String hashedPassword = Sha256.toHexString(Sha256.getSHA(snonce + cnonce + storedPasword));
 
             //match hashedPassword with stored
-            boolean correctPassword = resultEmail.getString("password").equals(hashedPassword);
+            boolean correctPassword = clientPassword.equals(hashedPassword);
             if (!correctPassword) {
                 return new LoginResponse(2, null);
             }
@@ -129,8 +138,9 @@ public class MongoUser {
         Bson query = Filters.eq("_id", _id);
 
         try {
-            String hashedPassword = Sha256.toHexString(Sha256.getSHA(password + _id.toString()));
-            newUser.append("password", hashedPassword);
+//            String hashedPassword = Sha256.toHexString(Sha256.getSHA(password + _id.toString()));
+//            String hashedPassword = Sha256.toHexString(Sha256.getSHA(password));
+            newUser.append("password", password);
             userCollection.replaceOne(query, newUser);
         } catch (Exception e) {
             userCollection.deleteOne(Filters.eq("_id", _id));
