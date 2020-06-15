@@ -126,26 +126,12 @@ public class MongoUser {
         int last = userCollection.find().sort(new BasicDBObject("userId", -1)).first().getInteger("userId");
 
         String password = registerJson.getString("password");
-        registerJson.remove("password");
         Document newUser = Document.parse(registerJson.toString());
         newUser.append("userId", last + 1);
         newUser.append("accType", 1);
 
         userCollection.insertOne(newUser);
 
-        //hash password
-        ObjectId _id = newUser.getObjectId("_id");
-        Bson query = Filters.eq("_id", _id);
-
-        try {
-//            String hashedPassword = Sha256.toHexString(Sha256.getSHA(password + _id.toString()));
-//            String hashedPassword = Sha256.toHexString(Sha256.getSHA(password));
-            newUser.append("password", password);
-            userCollection.replaceOne(query, newUser);
-        } catch (Exception e) {
-            userCollection.deleteOne(Filters.eq("_id", _id));
-            result.add("passwordException");
-        }
 
         return result;
     }
