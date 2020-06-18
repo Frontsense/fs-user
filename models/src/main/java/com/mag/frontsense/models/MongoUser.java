@@ -88,7 +88,8 @@ public class MongoUser {
 
             JSONObject idToken = new JSONObject()
                                     .put("email", resultEmail.getString("email"))
-                                    .put("user", resultEmail.getString("username"));
+                                    .put("user", resultEmail.getString("username"))
+                                    .put("id", resultEmail.getInteger("userId"));
 
             return new LoginResponse(0, idToken);
         } catch (NoSuchAlgorithmException e) {
