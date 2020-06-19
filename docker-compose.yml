@@ -1,0 +1,14 @@
+version: "2"
+services:
+  fs-user:
+    image: asrsa/fs-user
+
+    ports:
+      - 8080:8080
+
+    volumes:
+      - ./api/target/api-1.0-SNAPSHOT.jar:/api/target/api-1.0-SNAPSHOT.jar
+
+    command:
+      java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:7999 -jar fs-api-1.0-SNAPSHOT.jar
+
