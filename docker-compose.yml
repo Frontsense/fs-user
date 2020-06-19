@@ -10,5 +10,5 @@ services:
       - ./api/target/api-1.0-SNAPSHOT.jar:/api/target/api-1.0-SNAPSHOT.jar
 
     command:
-      java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:7999 -jar fs-api-1.0-SNAPSHOT.jar
+      java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:7999 -cp classes:dependency/* com.kumuluz.ee.EeApplication
 
