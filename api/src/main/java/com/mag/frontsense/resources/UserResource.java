@@ -153,4 +153,54 @@ public class UserResource {
                 .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept")
                 .build();
     }
+
+    @OPTIONS
+    @Path("/subscribe")
+    public Response optionsSubscribe() {
+        return Response.ok()
+                .header("Access-Control-Allow-Origin", "http://localhost:8100")
+                .header("Access-Control-Allow-Credentials", "true")
+                .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept")
+                .build();
+    }
+
+    @POST
+    @Path("/subscribe")
+    public Response subscribe(String data) {
+        JSONObject subResponse = usersBean.subscribeToTask(new JSONObject(data));
+
+
+        return Response.ok(subResponse.toString())
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Credentials", "true")
+                .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept")
+                .build();
+    }
+
+    @OPTIONS
+    @Path("/unsubscribe")
+    public Response optionsUnsubscribe() {
+        return Response.ok()
+                .header("Access-Control-Allow-Origin", "http://localhost:8100")
+                .header("Access-Control-Allow-Credentials", "true")
+                .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept")
+                .build();
+    }
+
+    @POST
+    @Path("/unsubscribe")
+    public Response unsubscribe(String data) {
+        JSONObject subResponse = usersBean.unsubscribeTask(new JSONObject(data));
+
+
+        return Response.ok(subResponse.toString())
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Credentials", "true")
+                .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept")
+                .build();
+    }
 }

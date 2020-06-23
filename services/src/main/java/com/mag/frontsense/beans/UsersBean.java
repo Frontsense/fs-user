@@ -33,7 +33,7 @@ public class UsersBean {
         return mu.getAllUsers();
     }
 
-    public LoginResponse loginUser(JSONObject loginJson, Map nonceMap) {
+    public LoginResponse loginUser(JSONObject loginJson, Map<String, String> nonceMap) {
         MongoUser mu = new MongoUser();
 
         return mu.loginUser(loginJson, nonceMap);
@@ -50,5 +50,17 @@ public class UsersBean {
         MongoUser mu = new MongoUser();
 
         return mu.createNonce();
+    }
+
+    public JSONObject subscribeToTask(JSONObject subscribeJSON) {
+        MongoUser mu = new MongoUser();
+
+        return mu.subscribeToTask(subscribeJSON);
+    }
+
+    public JSONObject unsubscribeTask(JSONObject data) {
+        MongoUser mu = new MongoUser();
+
+        return mu.unsubscribeTask(data);
     }
 }
