@@ -9,6 +9,6 @@ kumuluzee:
       port: 8080
   discovery:
     etcd:
-      hosts: http://127.0.0.1:2379
+      hosts: http://etcd:2379
     ttl: 20
     ping-interval: 15
