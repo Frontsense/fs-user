@@ -6,6 +6,6 @@ WORKDIR /app
 
 ADD ./api/target/ /app
 
-EXPOSE 8080
+EXPOSE 8081
 
 CMD java -cp classes:dependency/* com.kumuluz.ee.EeApplication
