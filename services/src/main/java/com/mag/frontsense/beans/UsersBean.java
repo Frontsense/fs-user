@@ -63,4 +63,10 @@ public class UsersBean {
 
         return mu.unsubscribeTask(data);
     }
+
+    public String subscribedTasks(Integer userId) {
+        MongoUser mu = new MongoUser();
+
+        return mu.getUserTasks(userId);
+    }
 }

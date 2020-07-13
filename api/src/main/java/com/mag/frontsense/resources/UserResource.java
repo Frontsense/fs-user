@@ -52,6 +52,19 @@ public class UserResource {
                 .build();
     }
 
+    @GET
+    @Path("/tasks/{userId}")
+    public Response getUsers(@PathParam("userId") Integer userId) {
+        String tasks = usersBean.subscribedTasks(userId);
+
+        return Response.ok(tasks)
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Credentials", "true")
+                .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept")
+                .build();
+    }
+
     @OPTIONS
     @Path("/nonce")
     public Response optionsNonce() {

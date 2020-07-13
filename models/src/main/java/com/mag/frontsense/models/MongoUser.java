@@ -49,6 +49,23 @@ public class MongoUser {
         return results;
     }
 
+    public String getUserTasks(Integer userId) {
+        MongoClient client = connectDB();
+        MongoDatabase db = client.getDatabase(DBName);
+        MongoCollection<Document> userCollection = db.getCollection(DBCollection);
+
+        String result = "[]";
+
+        Bson filterUserId = Filters.eq("userId", userId);
+        Document resultFilter = userCollection.find(filterUserId).first();
+        if (resultFilter != null) {
+            if (resultFilter.getString("tasks") != null)
+                result = resultFilter.getString("tasks");
+        }
+
+        return result;
+    }
+
     public String createNonce() {
         return Sha256.toHexString(Sha256.getNextSalt());
     }
