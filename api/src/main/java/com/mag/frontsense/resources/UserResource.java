@@ -167,21 +167,10 @@ public class UserResource {
                 .build();
     }
 
-    @OPTIONS
-    @Path("/subscribe")
-    public Response optionsSubscribe() {
-        return Response.ok()
-                .header("Access-Control-Allow-Origin", "http://localhost:8100")
-                .header("Access-Control-Allow-Credentials", "true")
-                .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept")
-                .build();
-    }
-
-    @POST
-    @Path("/subscribe")
-    public Response subscribe(String data) {
-        JSONObject subResponse = usersBean.subscribeToTask(new JSONObject(data));
+    @GET
+    @Path("/subscribe/{userId}/{taskId}")
+    public Response subscribe(@PathParam("userId") Integer userId, @PathParam("taskId") Integer taskId) {
+        JSONObject subResponse = usersBean.subscribeToTask(userId, taskId);
 
 
         return Response.ok(subResponse.toString())
@@ -192,21 +181,10 @@ public class UserResource {
                 .build();
     }
 
-    @OPTIONS
-    @Path("/unsubscribe")
-    public Response optionsUnsubscribe() {
-        return Response.ok()
-                .header("Access-Control-Allow-Origin", "http://localhost:8100")
-                .header("Access-Control-Allow-Credentials", "true")
-                .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept")
-                .build();
-    }
-
-    @POST
-    @Path("/unsubscribe")
-    public Response unsubscribe(String data) {
-        JSONObject subResponse = usersBean.unsubscribeTask(new JSONObject(data));
+    @GET
+    @Path("/unsubscribe/{userId}/{taskId}")
+    public Response unsubscribe(@PathParam("userId") Integer userId, @PathParam("taskId") Integer taskId) {
+        JSONObject subResponse = usersBean.unsubscribeTask(userId, taskId);
 
 
         return Response.ok(subResponse.toString())

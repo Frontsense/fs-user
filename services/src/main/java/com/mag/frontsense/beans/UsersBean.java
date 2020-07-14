@@ -52,16 +52,16 @@ public class UsersBean {
         return mu.createNonce();
     }
 
-    public JSONObject subscribeToTask(JSONObject subscribeJSON) {
+    public JSONObject subscribeToTask(Integer userId, Integer taskId) {
         MongoUser mu = new MongoUser();
 
-        return mu.subscribeToTask(subscribeJSON);
+        return mu.subscribeToTask(userId, taskId);
     }
 
-    public JSONObject unsubscribeTask(JSONObject data) {
+    public JSONObject unsubscribeTask(Integer userId, Integer taskId) {
         MongoUser mu = new MongoUser();
 
-        return mu.unsubscribeTask(data);
+        return mu.unsubscribeTask(userId, taskId);
     }
 
     public String subscribedTasks(Integer userId) {

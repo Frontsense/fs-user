@@ -155,12 +155,12 @@ public class MongoUser {
         return result;
     }
 
-    public JSONObject subscribeToTask(JSONObject subscribeJSON) {
+    public JSONObject subscribeToTask(Integer userId, Integer taskId) {
         MongoClient client = connectDB();
         MongoDatabase db = client.getDatabase(DBName);
         MongoCollection<Document> userCollection = db.getCollection(DBCollection);
 
-        Bson filterUser = Filters.eq("userId", subscribeJSON.getInt("userId"));
+        Bson filterUser = Filters.eq("userId", userId);
         Document resultFilter = userCollection.find(filterUser).first();
 
         JSONObject response = new JSONObject();
@@ -170,7 +170,7 @@ public class MongoUser {
 
             if (tasks == null) {
                 JSONArray tasksArray = new JSONArray();
-                tasksArray.put(subscribeJSON.getInt("taskId"));
+                tasksArray.put(taskId);
 
                 resultFilter.put("tasks", tasksArray.toString());
 
@@ -181,29 +181,29 @@ public class MongoUser {
 
                 for (Object element : tasksArray) {
                     int el = (int) element;
-                    if (el == subscribeJSON.getInt("taskId")) {
+                    if (el == taskId) {
                         response.put("error", "Already subscribed to that task");
                         return response;
                     }
                 }
 
-                tasksArray.put(subscribeJSON.getInt("taskId"));
+                tasksArray.put(taskId);
                 resultFilter.remove("tasks");
                 resultFilter.put("tasks", tasksArray.toString());
 
                 userCollection.replaceOne(filterUser, resultFilter);
             }
         }
-        response.put("success", "Task subscribed successfully");
+        response.put("success", "Subscribed");
         return response;
     }
 
-    public JSONObject unsubscribeTask(JSONObject data) {
+    public JSONObject unsubscribeTask(Integer userId, Integer taskId) {
         MongoClient client = connectDB();
         MongoDatabase db = client.getDatabase(DBName);
         MongoCollection<Document> userCollection = db.getCollection(DBCollection);
 
-        Bson filterUser = Filters.eq("userId", data.getInt("userId"));
+        Bson filterUser = Filters.eq("userId", userId);
         Document resultFilter = userCollection.find(filterUser).first();
 
         JSONObject response = new JSONObject();
@@ -219,7 +219,7 @@ public class MongoUser {
 
 
                 for(int i=0; i<tasksArray.length(); i++) {
-                    if ((int) tasksArray.get(i) == data.getInt("taskId")) {
+                    if ((int) tasksArray.get(i) == taskId) {
                         tasksArray.remove(i);
                         hasTask = true;
                     }
@@ -231,7 +231,7 @@ public class MongoUser {
             }
         }
         if (hasTask) {
-            response.put("success", "Task unsubscribed successfully");
+            response.put("success", "Unsubscribed");
         } else {
             response.put("error", "Not subscribed to this task");
         }
